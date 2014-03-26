@@ -1,0 +1,5 @@
+c:\users\sepereira\documents\visual studio 2010\Projects\br.uel.snunespereira.ia\br.uel.snunespereira.ia\bin\Debug\br.uel.snunespereira.ia.exe
+c:\users\sepereira\documents\visual studio 2010\Projects\br.uel.snunespereira.ia\br.uel.snunespereira.ia\bin\Debug\br.uel.snunespereira.ia.pdb
+c:\users\sepereira\documents\visual studio 2010\Projects\br.uel.snunespereira.ia\br.uel.snunespereira.ia\obj\x86\Debug\br.uel.snunespereira.ia.exe
+c:\users\sepereira\documents\visual studio 2010\Projects\br.uel.snunespereira.ia\br.uel.snunespereira.ia\obj\x86\Debug\br.uel.snunespereira.ia.pdb
+C:\Users\sepereira\Documents\Visual Studio 2010\Projects\br.uel.snunespereira.ia\br.uel.snunespereira.ia\obj\x86\Debug\br.uel.snunespereira.ia.csprojResolveAssemblyReference.cache

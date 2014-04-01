@@ -1,8 +1,16 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="br.uel.snunespereira.ai/Program.cs">
+    <Files>
+      <File FileName="br.uel.snunespereira.ai/algorithms/multilayerperceptron/BackPropagation.cs" Line="27" Column="27" />
+      <File FileName="br.uel.snunespereira.ai/algorithms/decisiontree/ID3.cs" Line="37" Column="60" />
+      <File FileName="br.uel.snunespereira.ai/Program.cs" Line="42" Column="21" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/Program.cs" line="17" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

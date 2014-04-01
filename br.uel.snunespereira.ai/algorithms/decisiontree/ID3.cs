@@ -41,13 +41,15 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
             string[][] filteredData =
                 data.Skip(data.ToList().FindIndex(m => m.ToString().Trim().ToLower() == "@data") + 1)
                     .ToList()
-                        .ConvertAll<string[]>(i => i.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries) ).ToArray();
+                        .ConvertAll<string[]>(i => i.Split(new string[] { "," }, 
+							StringSplitOptions.RemoveEmptyEntries) ).ToArray();
 
             int trainingLength = (int)(filteredData.Length * 75 / 100);
             string[][] trainingData = filteredData.Take(trainingLength).ToArray();
             string[][] testData = filteredData.Skip(trainingLength).ToArray();
 
-			TreeNode root = MountTree(attributeList.Take(attributeList.Count() - 1).ToArray(), attributeList.Last(), trainingData);
+			TreeNode root = MountTree(attributeList.Take(attributeList.Count() - 1).ToArray(), 
+																			attributeList.Last(), trainingData);
 
             execution.AppendLine();
             execution.AppendLine("The tree is:");
@@ -220,7 +222,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
             TreeNode root = new TreeNode(bestAttribute);
             
             // creates a new attribute list
-            shared.Attribute[] newAttributeList = attributeList.Where(m => m.Name.Trim() != bestAttribute.Name.Trim()).ToArray();
+            shared.Attribute[] newAttributeList = attributeList
+													.Where(m => m.Name.Trim() != bestAttribute.Name.Trim()).ToArray();
 
             // for each value in attributes
             foreach (string value in root.Attribute.Values)
@@ -232,9 +235,13 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
 
                     // gets the new data
                     if (value.IndexOf('<') > -1)
-                        newData = data.Where(m => double.Parse(m[bestAttribute.Index].Trim()) < double.Parse(value.Trim().Replace("<", ""))).ToArray();
+                        newData = data
+							.Where(m => double.Parse(m[bestAttribute.Index].Trim()) < 
+										double.Parse(value.Trim().Replace("<", ""))).ToArray();
                     else
-                        newData = data.Where(m => double.Parse(m[bestAttribute.Index].Trim()) >= double.Parse(value.Trim().Replace("=", "").Replace(">", ""))).ToArray();
+                        newData = data
+							.Where(m => double.Parse(m[bestAttribute.Index].Trim()) >= 
+										double.Parse(value.Trim().Replace("=", "").Replace(">", ""))).ToArray();
 
                     // calls again
                     TreeNode childContinous = MountTree(newAttributeList, categoricalAttribute, newData);
@@ -330,7 +337,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                         {
                             // gets entropy and it is proportion
                             double proportion = 0;
-                            double entropy = GetEntropy(attribute, categoricalAttribute, line.ToString(), data, out proportion);
+                            double entropy = GetEntropy(attribute, categoricalAttribute, line.ToString(), data, 
+																										out proportion);
 
                             // add the entropy to entropyList
                             continousEntropyList.Add(entropy * proportion);
@@ -338,7 +346,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
 
                         // the information gain is 1.0 minus the sum of all entropies
                         if (continousEntropyList.Sum() > 0)
-                            continousGainList.Add(new Tuple<string, double>("<" + item, 1D - continousEntropyList.Sum()));
+                            continousGainList.Add(
+								new Tuple<string, double>("<" + item, 1D - continousEntropyList.Sum()));
 
                         continousEntropyList.Clear();
 
@@ -347,7 +356,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                         {
                             // gets entropy and it is proportion
                             double proportion = 0;
-                            double entropy = GetEntropy(attribute, categoricalAttribute, line.ToString(), data, out proportion);
+                            double entropy = GetEntropy(attribute, categoricalAttribute, line.ToString(), data, 
+																										out proportion);
 
                             // add the entropy to entropyList
                             continousEntropyList.Add(entropy * proportion);
@@ -355,7 +365,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
 
                         // the information gain is 1.0 minus the sum of all entropies
                         if (continousEntropyList.Sum() > 0)
-                            continousGainList.Add(new Tuple<string, double>("=>" + item, 1D - continousEntropyList.Sum()));
+                            continousGainList.Add(
+								new Tuple<string, double>("=>" + item, 1D - continousEntropyList.Sum()));
                     }
 
                     // if there is any item in gain list
@@ -374,7 +385,8 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                             attribute.Values.Add(maxGainContinuous.Item1.Replace("<", "=>"));
 
                         // the information gain is 1.0 minus the sum of all entropies
-                        listInformationGain.Add(new Tuple<shared.Attribute, double>(attribute, maxGainContinuous.Item2));
+                        listInformationGain.Add(
+							new Tuple<shared.Attribute, double>(attribute, maxGainContinuous.Item2));
                     }
                 }
             }
@@ -411,15 +423,19 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                 // gets the total count of current value
                 totalCountValue = data.Length;
                 // gets the total of positive itens in current value
-                totalFirstCategoricalValue = data.Where(m => m[categoricalAttribute.Index].Trim() == categoricalAttribute.Values.Last().Trim()).Count();
+                totalFirstCategoricalValue = data
+					.Where(m => m[categoricalAttribute.Index].Trim() == categoricalAttribute.Values.Last().Trim())
+						.Count();
             }
             else 
             {
                 // gets the total count of current value
                 totalCountValue = data.Where(m => m[attribute.Index].Trim() == value.Trim()).Count();
                 // gets the total of positive itens in current value
-                totalFirstCategoricalValue = data.Where(m => m[attribute.Index].Trim() == value.Trim()
-                                                          && m[categoricalAttribute.Index].Trim() == categoricalAttribute.Values.Last().Trim()).Count();
+                totalFirstCategoricalValue = data
+					.Where(m => m[attribute.Index].Trim() == value.Trim()
+                             && m[categoricalAttribute.Index].Trim() == categoricalAttribute.Values.Last().Trim())
+						.Count();
             }
 
             // gets the proportion
@@ -437,7 +453,7 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                  *                   - (negative values / total values) * log2 (negative values / total values)
                  */
                 return -(totalFirstCategoricalValue / totalCountValue) * Math.Log(totalFirstCategoricalValue / totalCountValue)
-                   - ((totalCountValue - totalFirstCategoricalValue) / totalCountValue) * Math.Log((totalCountValue - totalFirstCategoricalValue) / totalCountValue);
+                       - ((totalCountValue - totalFirstCategoricalValue) / totalCountValue) * Math.Log((totalCountValue - totalFirstCategoricalValue) / totalCountValue);
             }
         }
     }

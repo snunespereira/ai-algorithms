@@ -8,7 +8,7 @@
     <ProjectGuid>{26B75F94-D5AA-4BEF-8EAC-DEDBF80306AC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>br.uel.snunespereira.ia</RootNamespace>
+    <RootNamespace>br.uel.snunespereira.ai</RootNamespace>
     <AssemblyName>br.uel.snunespereira.ia</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
+    <Commandlineparameters>/Users/sergionunes/Documents/AMOSTRA_V2.arff 2</Commandlineparameters>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -51,10 +52,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="shared\AlgorithmType.cs" />
     <Compile Include="shared\AlgorithmBase.cs" />
+    <Compile Include="algorithms\multilayerperceptron\BackPropagation.cs" />
+    <Compile Include="algorithms\multilayerperceptron\structure\Perceptron.cs" />
+    <Compile Include="algorithms\multilayerperceptron\structure\FunctionType.cs" />
+    <Compile Include="algorithms\multilayerperceptron\structure\PerceptronType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="algorithms\backpropagation\" />
     <Folder Include="algorithms\svm\" />
+    <Folder Include="algorithms\multilayerperceptron\" />
+    <Folder Include="algorithms\multilayerperceptron\structure\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

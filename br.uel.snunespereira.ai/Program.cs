@@ -101,6 +101,9 @@ namespace br.uel.snunespereira.ai
                     case AlgorithmType.DecisionTree:
                         Console.WriteLine(ID3.Execute(data));
                         break;
+					case AlgorithmType.BackPropagation:
+						Console.WriteLine (BackPropagation.Execute (data));
+						break;
                 }
             }
 

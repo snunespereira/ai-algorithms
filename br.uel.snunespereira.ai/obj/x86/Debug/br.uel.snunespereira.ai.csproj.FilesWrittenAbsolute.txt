@@ -1,5 +1,5 @@
-/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/br.uel.snunespereira.ai/obj/x86/Debug/.NETFramework,Version=v4.0,Profile=Client.AssemblyAttribute.cs
-/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/br.uel.snunespereira.ai/bin/Debug/br.uel.snunespereira.ia.exe.mdb
-/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/br.uel.snunespereira.ai/bin/Debug/br.uel.snunespereira.ia.exe
-/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/br.uel.snunespereira.ai/obj/x86/Debug/br.uel.snunespereira.ia.exe
-/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/br.uel.snunespereira.ai/obj/x86/Debug/br.uel.snunespereira.ia.exe.mdb
+/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/obj/x86/Debug/.NETFramework,Version=v4.0,Profile=Client.AssemblyAttribute.cs
+/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/bin/Debug/br.uel.snunespereira.ia.exe.mdb
+/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/bin/Debug/br.uel.snunespereira.ia.exe
+/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/obj/x86/Debug/br.uel.snunespereira.ia.exe
+/Users/sergionunes/Google Drive/Pós Graduação/Trabalho de Conclusão de Curso/Codigo/ai-algorithms/br.uel.snunespereira.ai/obj/x86/Debug/br.uel.snunespereira.ia.exe.mdb

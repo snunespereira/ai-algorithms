@@ -36,40 +36,77 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
             // for each founded attribute
             foreach (shared.Attribute att in attributeList)
                 execution.AppendFormat("- {0}\n", att.Name);
+				
+			// format the data to usage
+			string[] cleanData =
+				data.Skip (data.ToList ().FindIndex (m => m.ToString ().Trim ().ToLower () == "@data") + 1)
+					.ToList ().ToArray();
 
-            // format the data to usage
-            string[][] filteredData =
-                data.Skip(data.ToList().FindIndex(m => m.ToString().Trim().ToLower() == "@data") + 1)
-                    .ToList()
-                        .ConvertAll<string[]>(i => i.Split(new string[] { "," }, 
-							StringSplitOptions.RemoveEmptyEntries) ).ToArray();
+			int numberFolds = 10;
+			bool showTree = false;
 
-            int trainingLength = (int)(filteredData.Length * 75 / 100);
-            string[][] trainingData = filteredData.Take(trainingLength).ToArray();
-            string[][] testData = filteredData.Skip(trainingLength).ToArray();
+			execution.AppendLine();
+			execution.AppendFormat("Crossfolding data. Number of folds: {0}", numberFolds);
+			execution.AppendLine();
 
-			TreeNode root = MountTree(attributeList.Take(attributeList.Count() - 1).ToArray(), 
-																			attributeList.Last(), trainingData);
+			// crossfold data to usage
+			List<string[]> crossfoldedData = AlgorithmBase.CrossfoldData (cleanData, numberFolds);
 
-            execution.AppendLine();
-            execution.AppendLine("The tree is:");
+			bool[] usedFolds = new bool[numberFolds];
+			Random rnd = new Random ();
 
-            PrintTree("", execution, root);
+			// for each fold
+			for (int fold = 0; fold < numberFolds; fold++) {
+			
+				int position = rnd.Next (0, numberFolds);
 
-            int success = 0, failure = 0;
+				while (usedFolds [position])
+					position = rnd.Next (0, numberFolds);
 
-            foreach (var line in testData)
-            {
-                if (TestTree(root, line, attributeList.Last()))
-                    success++;
-                else
-                    failure++;
-            }
+				List<string> buildData = new List<string> ();
 
-            execution.AppendLine();
-            execution.AppendFormat("Successful: {0}\n", success);
-            execution.AppendFormat("Failure: {0}\n", failure);
-            execution.AppendFormat("Rate: {0}%\n", Math.Ceiling((double)success / (double)testData.Length * 100));
+				foreach (var item in crossfoldedData.Where ((m, i) => !i.Equals (position)))
+					buildData.AddRange (item);
+
+				string[][] filteredData = buildData.ConvertAll<string[]> (i => i.Split (new string[] { "," }, 
+					                          StringSplitOptions.RemoveEmptyEntries)).ToArray ();
+
+				string[][] testData = crossfoldedData [position].ToList ().
+					ConvertAll<string[]> (i => i.Split (new string[] { "," }, 
+					                      StringSplitOptions.RemoveEmptyEntries)).ToArray ();
+
+				execution.AppendLine ();
+				execution.AppendFormat ("Building tree for fold {0}.", fold + 1);
+				execution.AppendLine ();
+
+				TreeNode root = MountTree(attributeList.Take(attributeList.Count() - 1).ToArray(), 
+					attributeList.Last(), filteredData);
+
+				if (showTree) {
+					execution.AppendLine ();
+					execution.AppendLine ("The tree is:");
+
+					PrintTree ("", execution, root);
+				}
+
+				execution.AppendFormat ("Testing tree for fold {0}.", fold + 1);
+				execution.AppendLine ();
+
+				int success = 0, failure = 0;
+
+				foreach (var line in testData)
+				{
+					if (TestTree(root, line, attributeList.Last()))
+						success++;
+					else
+						failure++;
+				}
+
+				execution.AppendLine();
+				execution.AppendFormat("Successful: {0}\n", success);
+				execution.AppendFormat("Failure: {0}\n", failure);
+				execution.AppendFormat("Rate: {0}%\n", Math.Ceiling((double)success / (double)testData.Length * 100));
+			}
 
             return execution;
         }
@@ -121,19 +158,25 @@ namespace br.uel.snunespereira.ai.algorithms.decisiontree
                 }
                 else // or node has a domain
                 {
-                    int index = 0;
+					if (node.Attribute.Index > -1) {
 
-                    // for each attribute value
-                    foreach (string item in node.Attribute.Values)
-                    {
-                        // makes the comparison
-                        if (item.Trim() == line[node.Attribute.Index].Trim())
-                            break; // item found, breaks the loop
-                        index++;
-                    }
+						int index = 0;
 
-                    // recalls the method, passing the correct node
-                    return TestTree(node.Childs[index], line, categoricalAttribute);
+						// for each attribute value
+						foreach (string item in node.Attribute.Values) {
+							// makes the comparison
+							if (item.Trim () == line [node.Attribute.Index].Trim ())
+								break; // item found, breaks the loop
+							index++;
+						}
+
+						// recalls the method, passing the correct node
+						return TestTree (node.Childs [index], line, categoricalAttribute);
+					} 
+					else 
+					{
+						return false;
+					}
                 }
             }
         }

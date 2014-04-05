@@ -29,7 +29,12 @@ namespace br.uel.snunespereira.ai.shared
                 if (line.IndexOf('{') > -1)
                 {
                     string values = line.Substring(line.IndexOf('{')).Replace("{", string.Empty).Replace("}", string.Empty).Trim();
-                    attributeList.Add(new shared.Attribute(typeof(string), stringParts.Skip(1).Take(1).First(), index, values.Split(',')));
+
+					List<string> formattedValues = values.Split (',').ToList ();
+					for (int x = 0; x < formattedValues.Count (); x++)
+						formattedValues [x] = formattedValues [x].Trim ();
+
+					attributeList.Add(new shared.Attribute(typeof(string), stringParts.Skip(1).Take(1).First(), index, formattedValues.ToArray()));
                 }
                 else
                 {
@@ -43,5 +48,57 @@ namespace br.uel.snunespereira.ai.shared
 
             return attributeList;
         }
-    }
+    
+		/// <summary>
+		/// Crossfolds the data.
+		/// </summary>
+		/// <returns>The data.</returns>
+		/// <param name="data">Data.</param>
+		/// <param name="folds">Folds.</param>
+		protected static List<string[]> CrossfoldData(string[] data, int folds)
+		{
+			// gets the maximum lines per fold
+			int linesPerFold = data.Length / folds;
+
+			// creates a list the contains the folded data
+			List<string[]> returningList = new List<string[]> ();
+
+			// creates a lists that contains used positions
+			List<int> usedPositions = new List<int> ();
+
+			// creates a random value
+			Random rnd = new Random ();
+
+			// for each fold
+			for(int fold = 0; fold < folds; fold++) {
+
+				// create a list of lines container
+				List<string> linesInFold = new List<string> ();
+
+				// for each line in fold
+				for(int line = 0; line < linesPerFold; line++) {
+
+					// gets the next value
+					int position = rnd.Next (0, data.Length);
+
+					// while this position it is used
+					while (usedPositions.Contains (position)) {
+						position = rnd.Next (0, data.Length); // gets another position
+					}
+
+					// add the line in line fold array
+					linesInFold.Add (data [position]);
+
+					// saves the position
+					usedPositions.Add (position);
+				}
+
+				// the array of selected lines is saved in current fold
+				returningList.Add (linesInFold.ToArray ());
+			}
+
+			// return the folded list
+			return returningList;
+		}
+	}
 }

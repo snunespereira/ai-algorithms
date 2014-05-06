@@ -1,6 +1,10 @@
 ﻿<Properties GitUserInfo="UsingGIT">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="br.uel.snunespereira.ai/algorithms/multilayerperceptron/BackPropagation.cs">
+    <Files>
+      <File FileName="br.uel.snunespereira.ai/algorithms/multilayerperceptron/BackPropagation.cs" Line="537" Column="80" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

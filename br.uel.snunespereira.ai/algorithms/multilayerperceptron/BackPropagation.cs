@@ -147,34 +147,38 @@ namespace br.uel.snunespereira.ai
 																			shared.Attribute categoricalAttribute)
 		{
 			double error = 0;
+			int epoch = 0;
+			int _line = 0;
 
-			// to each epoch (we are assuming that each training data line is an epoch)
-			foreach (var line in data) {
+			while (epoch < 300) {
+				_line = 0;
+				// to each epoch (we are assuming that each training data line is an epoch)
+				foreach (var line in data) {
+				
+					int index = 0;
+					List<double> inputValues = new List<double> ();
 
-				int epoch = 0;
-				int index = 0;
-				List<double> inputValues = new List<double> ();
+					double[] targetValues = new double[1] 
+					{ categoricalAttribute.Values.IndexOf (line [categoricalAttribute.Index]) };
 
-				double[] targetValues = new double[1] 
-				{ categoricalAttribute.Values.IndexOf (line [categoricalAttribute.Index]) };
-
-				foreach (string value in line) {
-					if (index < listAttributes.Count ()) {
-						if (listAttributes [index].Values.Count () > 0)
-							inputValues.Add (listAttributes [index].Values.IndexOf (value));
-						else
-							inputValues.Add (double.Parse (value));
-						index++;
+					foreach (string value in line) {
+						if (index < listAttributes.Count ()) {
+							if (listAttributes [index].Values.Count () > 0)
+								inputValues.Add (listAttributes [index].Values.IndexOf (value));
+							else
+								inputValues.Add (double.Parse (value));
+							index++;
+						}
 					}
-				}
-
-				while (epoch < 10000) {
 
 					double[] hiddenOut;
 					double[] outputOut = this.ComputeOutputs (inputValues.ToArray (), out hiddenOut);
 
 					// get the error
 					error = this.GetError (targetValues, outputOut);
+
+
+					Console.Write("epoca: {0}, linha: {1}, e/o: {2}-{3} erro: {4}\n", epoch, _line, targetValues[0], Math.Round (outputOut[0], 0), error);
 
 					// if current error is less the the defined error threshold
 					if (error < this.ErrorThreshold) {
@@ -184,13 +188,10 @@ namespace br.uel.snunespereira.ai
 					// update the weights
 					this.UpdateWeights (inputValues.ToArray (), hiddenOut, outputOut, targetValues);
 
-					epoch++;
+					_line++;
 				}
 
-				// if current error is less the the defined error threshold
-				if (error < this.ErrorThreshold) {
-					break;
-				}
+				epoch++;
 			}
 		}
 
@@ -310,8 +311,8 @@ namespace br.uel.snunespereira.ai
 				// apply the current biases
 				hiddenSums [j] += HiddenBiases [j];
 
-				// apply the activation function (in this layer is tanh)
-				hiddenOut[j] = this.HyperTanFunction(hiddenSums[j]);
+				// apply the activation function (in this layer is sigmoid)
+				hiddenOut[j] = this.SigmoidFunction(hiddenSums[j]);
 			}
 
 			#endregion
@@ -335,8 +336,8 @@ namespace br.uel.snunespereira.ai
 				// apply the current biases
 				outputSums [j] += OutputBiases [j];
 
-				// apply the activation function (in this layer is sigmoid)
-				outputOut[j] = this.SigmoidFunction(outputSums[j]);
+				// apply the activation function (in this layer is tahn)
+				outputOut[j] = this.HyperTanFunction(outputSums[j]);
 			}
 
 			#endregion
@@ -358,14 +359,15 @@ namespace br.uel.snunespereira.ai
 			// apply the error gradient on output layer
 			for (int x = 0; x < this.OutputLayer; x++) 
 			{
-				this.OutputGradients[x] = ((1 - outputValues[x]) * outputValues[x]) * (targetValues[x] - outputValues[x]);
+				double derivative = (1 - outputValues[x]) * (1 + outputValues[x]); // derivative of tanh
+				this.OutputGradients[x] = derivative * (targetValues[x] - outputValues[x]);
 			}
 
 			// apply the error gradient on hidden layer
 			for (int x = 0; x < this.HiddenLayer; x++) 
 			{
-				// derivative of tanh is (1-y)(1+y)
-				double derivative = (1 - hiddenValues[x]) * (1 + hiddenValues[x]); 
+				// derivative of tanh
+				double derivative = (1 - hiddenValues[x]) * hiddenValues[x];
 				double sum = 0.0;
 
 				// each hidden delta is the sum of numOutput terms
@@ -464,7 +466,7 @@ namespace br.uel.snunespereira.ai
 			double sum = 0.0;
 
 			for (int i = 0; i < targetValues.Length; ++i)
-				sum += (targetValues[i] - outputValues[i]) * (targetValues[i] - outputValues[i]);
+				sum += Math.Abs(targetValues[i] - outputValues[i]);
 
 			return Math.Sqrt(sum);
 		}
@@ -488,8 +490,8 @@ namespace br.uel.snunespereira.ai
 		/// <param name="x">The x coordinate.</param>
 		private double HyperTanFunction(double x)
 		{
-			if (x < -45.0) return -1.0;
-			else if (x > 45.0) return 1.0;
+			if (x < -10.0) return -1.0;
+			else if (x > 10.0) return 1.0;
 			else return Math.Tanh(x);
 		}
 
@@ -532,14 +534,14 @@ namespace br.uel.snunespereira.ai
 			execution.AppendLine();
 
 			// crossfold data to usage
-			List<string[]> crossfoldedData = AlgorithmBase.CrossfoldData (cleanData, numberFolds);
+			List<string[]> crossfoldedData = AlgorithmBase.CrossfoldData (cleanData.Where(m => m.IndexOf(",SIM") > -1).ToArray(), numberFolds);
 
 			bool[] usedFolds = new bool[numberFolds];
 			Random rnd = new Random ();
 
 
 			// for each fold
-			for (int fold = 0; fold < numberFolds; fold++) {
+			for (int fold = 0; fold < 1; fold++) {
 
 				// creates the neural network
 				BackPropagation bpg = new BackPropagation(attributeList.Count - 1, 
@@ -570,6 +572,7 @@ namespace br.uel.snunespereira.ai
 				bpg.BuildNetwork (filteredData, attributeList.Take(attributeList.Count() -1).ToArray(), 
 																								attributeList.Last());
 
+				Console.Read ();
 				execution.AppendFormat ("Testing network for fold {0}.", fold + 1);
 				execution.AppendLine ();
 
